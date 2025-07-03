@@ -1,1 +1,1 @@
-wheel==0.45.1
+pip install requests python-dotenv python-telegram-bot
