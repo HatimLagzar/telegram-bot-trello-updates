@@ -22,7 +22,7 @@ def get_multiple_lists_status(list_names):
     response = requests.get(url, params=params)
 
     if response.status_code != 200:
-        return f"❌ Failed to fetch lists: {response.status_code}"
+        return f"❌ Failed to fetch lists\\: {response.status_code}"
 
     all_lists = response.json()
     output = []
@@ -30,7 +30,7 @@ def get_multiple_lists_status(list_names):
     for name in list_names:
         trello_list = next((lst for lst in all_lists if lst['name'].lower() == name.lower()), None)
         if not trello_list:
-            output.append(f"⚠️ List '{name}' not found.\n")
+            output.append(f"⚠️ List '{escape_markdown(name, version=2)}' not found\\.\n")
             continue
 
         list_id = trello_list['id']
@@ -38,11 +38,11 @@ def get_multiple_lists_status(list_names):
         card_resp = requests.get(card_url, params=params)
 
         if card_resp.status_code != 200:
-            output.append(f"❌ Failed to fetch cards for '{name}': {card_resp.status_code}\n")
+            output.append(f"❌ Failed to fetch cards for '{escape_markdown(name, version=2)}'\\: {card_resp.status_code}\n")
             continue
 
         cards = card_resp.json()
-        card_lines = "\n".join([f"• {escape_markdown(card['name'], version=2)}" for card in cards]) if cards else "✅ No cards."
+        card_lines = "\n".join([f"• {escape_markdown(card['name'], version=2)}" for card in cards]) if cards else "✅ No cards\\."
         output.append(f"📌 {escape_markdown(name, version=2)}\n{card_lines}\n")
 
     return "\n".join(output)
