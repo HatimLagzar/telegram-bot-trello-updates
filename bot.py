@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.helpers import escape_markdown
 
 # Load environment variables
 load_dotenv()
@@ -41,8 +42,8 @@ def get_multiple_lists_status(list_names):
             continue
 
         cards = card_resp.json()
-        card_lines = "\n".join([f"• {card['name']}" for card in cards]) if cards else "✅ No cards."
-        output.append(f"📌 {name}\n{card_lines}\n")
+        card_lines = "\n".join([f"• {escape_markdown(card['name'], version=2)}" for card in cards]) if cards else "✅ No cards."
+        output.append(f"📌 {escape_markdown(name, version=2)}\n{card_lines}\n")
 
     return "\n".join(output)
 
@@ -54,7 +55,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     await update.message.reply_text("📋 Fetching Trello list status...")
     result = get_multiple_lists_status(list_names)
-    await update.message.reply_text(result, parse_mode="Markdown")
+    await update.message.reply_text(result, parse_mode="MarkdownV2")
 
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
