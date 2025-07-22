@@ -42,7 +42,7 @@ def get_multiple_lists_status(list_names):
 
         cards = card_resp.json()
         card_lines = "\n".join([f"• {card['name']}" for card in cards]) if cards else "✅ No cards."
-        output.append(f"📌 *{name}*\n{card_lines}\n")
+        output.append(f"📌 {name}\n{card_lines}\n")
 
     return "\n".join(output)
 
